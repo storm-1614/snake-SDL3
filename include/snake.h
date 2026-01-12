@@ -13,6 +13,7 @@ enum direction
     down
 };
 
+extern direction snakeDire;
 
 void initSnake();
 void drawSnake();

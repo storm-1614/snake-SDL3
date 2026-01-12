@@ -4,6 +4,7 @@
 #include "../include/snake.h"
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_init.h>
+#include <SDL3/SDL_keycode.h>
 #include <SDL3/SDL_log.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_timer.h>
@@ -67,17 +68,47 @@ void runWin()
         last = now;
         accumulator += delta;
 
-        SDL_PollEvent(&event);
-        switch (event.type)
+        //        SDL_PollEvent(&event);
+        //        switch (event.type)
+        //        {
+        //        case SDL_EVENT_QUIT:
+        //            running = false;
+        //        case SDL_EVENT_KEY_DOWN:
+        //
+        if (SDL_PollEvent(&event))
         {
-        case SDL_EVENT_QUIT:
-            running = false;
+            if (event.type == SDL_EVENT_QUIT)
+            {
+                running = false;
+            }
+            if (event.type == SDL_EVENT_KEY_DOWN)
+            {
+                switch (event.key.key)
+                {
+                case SDLK_W:
+                    if (snakeDire != down)
+                        snakeDire = up;
+                    break;
+                case SDLK_A:
+                    if (snakeDire != right)
+                        snakeDire = left;
+                    break;
+                case SDLK_S:
+                    if (snakeDire != up)
+                        snakeDire = down;
+                    break;
+                case SDLK_D:
+                    if (snakeDire != left)
+                        snakeDire = right;
+                    break;
+                }
+            }
         }
 
         while (accumulator >= STEP)
         /*
-        * 更新的内容放这里
-        */
+         * 更新的内容放这里
+         */
         {
             updateSnake();
             accumulator -= STEP;

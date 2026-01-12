@@ -57,11 +57,12 @@ void updateSnake()
 
 void debugSnakeData()
 {
+    SDL_Log("LOG：蛇身数据结构信息打印");
     for (auto iter : snakeBody)
     {
         SDL_Log("x=%d, y=%d", iter.x, iter.y);
     }
-    SDL_Log("===========");
+    SDL_Log("=========================");
 }
 
 void drawSnake()
