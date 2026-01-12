@@ -1,0 +1,13 @@
+[
+  {
+    "file": "main.cpp",
+    "arguments": [
+      "g++",
+      "main.cpp",
+      "-o",
+      "game"
+    ],
+    "directory": "/data/project/c_curriculum_design/Game",
+    "output": "game"
+  }
+]
