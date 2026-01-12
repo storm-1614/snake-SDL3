@@ -2,6 +2,7 @@
 #include "../include/food.h"
 #include "../include/game.h"
 #include <SDL3/SDL_log.h>
+#include <algorithm>
 
 std::list<point> snakeBody;
 color snakeColor;
@@ -23,7 +24,8 @@ point nextPos()
      * 这一行代码我是真无语了
      * list 底层逻辑是双向链表,一大堆问题
      */
-    point head = *(--snakeBody.end());
+    point head = snakeBody.back();
+    SDL_Log("head：x=%d, y=%d", head.x, head.y);
     switch (snakeDire)
     {
     case left:
@@ -52,10 +54,18 @@ point nextPos()
 
     return head;
 }
+
 void updateSnake()
 {
+    static int count = 0;
+    count++;
     point next = nextPos();
 
+    if (count > 10 && std::find(snakeBody.begin(), snakeBody.end(), next) != snakeBody.end())
+    {
+        SDL_Log("You Died");
+        exit(0);
+    }
     if (next.x == foodPos.x && next.y == foodPos.y)
     {
         snakeBody.emplace_back(next);
@@ -80,7 +90,6 @@ void debugSnakeData()
 
 void drawSnake()
 {
-    debugSnakeData();
     for (auto iter : snakeBody)
     {
         drawRect(iter.x, iter.y, snakeColor);

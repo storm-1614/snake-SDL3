@@ -6,12 +6,6 @@
 const int h = 20;
 const int w = 20;
 
-
-void test()
-{
-    SDL_Log("This is a test\n");
-}
-
 void drawRect(int x, int y,color c)
 {
     SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
