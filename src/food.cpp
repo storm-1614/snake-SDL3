@@ -6,9 +6,11 @@
 #include <cstdlib>
 
 color foodColor;
+point foodPos;
 void initFood()
 {
     foodColor = color{.r = 255, .g = 0, .b = 0, .a = 255};
+    foodPos = randomFood();
 }
 point randomFood()
 {
@@ -30,8 +32,7 @@ point randomFood()
     return foodPos;
 }
 
-void DrawFood()
+void drawFood()
 {
-    point foodPos = randomFood();
     drawRect(foodPos.x, foodPos.y, foodColor);
 }

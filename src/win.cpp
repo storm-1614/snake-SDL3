@@ -1,7 +1,7 @@
 #include "../include/win.h"
 #include "../include/food.h"
-#include "../include/snake.h"
 #include "../include/game.h"
+#include "../include/snake.h"
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_init.h>
 #include <SDL3/SDL_log.h>
@@ -75,15 +75,21 @@ void runWin()
         }
 
         while (accumulator >= STEP)
+        /*
+        * 更新的内容放这里
+        */
         {
-            DrawFood();
+            updateSnake();
             accumulator -= STEP;
         }
-        drawSnake();
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-        SDL_UpdateWindowSurface(window);
+        SDL_RenderPresent(renderer);
+        drawSnake();
+        drawFood();
+        SDL_RenderPresent(renderer);
     }
+
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_Quit();

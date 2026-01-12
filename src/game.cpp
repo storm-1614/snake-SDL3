@@ -14,9 +14,8 @@ void test()
 
 void drawRect(int x, int y,color c)
 {
-    SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, SDL_ALPHA_OPAQUE);
+    SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
     SDL_Point dot{x, y};
     SDL_FRect rect{(float)dot.x, (float)dot.y, w, h};
     SDL_RenderFillRect(renderer, &rect);
-    SDL_RenderPresent(renderer);
 }

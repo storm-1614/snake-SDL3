@@ -3,7 +3,8 @@
 #include <SDL3/SDL_rect.h>
 
 extern color foodColor;
+extern point foodPos;
 
 void initFood();
 point randomFood();
-void DrawFood();
+void drawFood();
