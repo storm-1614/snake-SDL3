@@ -3,7 +3,6 @@
 
 int main()
 {
-    test();
     runWin();
     return 0;
 }

@@ -41,6 +41,15 @@ point nextPos()
     default:
         break;
     }
+    if (head.x >= 800)
+        head.x = 0;
+    else if (head.x < 0)
+        head.x = 800;
+    if (head.y >= 600)
+        head.y = 0;
+    else if (head.y < 0)
+        head.y = 600;
+
     return head;
 }
 void updateSnake()
