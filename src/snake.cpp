@@ -2,7 +2,6 @@
 #include "../include/food.h"
 #include "../include/game.h"
 #include <SDL3/SDL_log.h>
-#include <future>
 
 std::list<point> snakeBody;
 color snakeColor;
@@ -48,7 +47,12 @@ void updateSnake()
 {
     point next = nextPos();
 
-    if (next.x != foodPos.x && next.y != foodPos.y)
+    if (next.x == foodPos.x && next.y == foodPos.y)
+    {
+        snakeBody.emplace_back(next);
+        foodPos = randomFood();
+    }
+    else
     {
         snakeBody.erase(snakeBody.begin());
         snakeBody.emplace_back(next);

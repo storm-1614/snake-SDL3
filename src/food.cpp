@@ -15,21 +15,20 @@ void initFood()
 point randomFood()
 {
     bool flag = false;
-    point foodPos;
+    point pos;
     while (!flag)
     {
-
-        int x = rand() % 800 + 1;
-        int y = rand() % 600 + 1;
-        foodPos.x = x;
-        foodPos.y = y;
-        if (std::find(snakeBody.begin(), snakeBody.end(), foodPos) == snakeBody.end())
+        int x = rand() % (800/20);
+        int y = rand() % (600/20);
+        pos.x = x*20;
+        pos.y = y*20;
+        if (std::find(snakeBody.begin(), snakeBody.end(), pos) == snakeBody.end())
         {
             SDL_Log("Log: 生成一个食物");
             flag = true;
         }
     }
-    return foodPos;
+    return pos;
 }
 
 void drawFood()
