@@ -1,20 +1,26 @@
 #include "../include/win.h"
 #include "../include/food.h"
-#include "../include/game.h"
 #include "../include/snake.h"
 #include <SDL3/SDL_events.h>
 #include <SDL3/SDL_init.h>
+#include <SDL3/SDL_iostream.h>
 #include <SDL3/SDL_keycode.h>
 #include <SDL3/SDL_log.h>
+#include <SDL3/SDL_oldnames.h>
 #include <SDL3/SDL_render.h>
+#include <SDL3/SDL_surface.h>
 #include <SDL3/SDL_timer.h>
 #include <SDL3/SDL_video.h>
+#include <SDL3_image/SDL_image.h>
 #include <cstddef>
+#include <cstdio>
 #include <cstdlib>
 #include <ctime>
 
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
+SDL_Surface *bgSurface = NULL;
+SDL_Texture *bgTexture = NULL;
 
 const int WINDOW_HEIGHT = 600;
 const int WINDOW_WIDTH = 800;
@@ -47,7 +53,30 @@ void initWin()
         SDL_Log("错误: VSync 错误");
         exit(1);
     }
+    // 加载图片
+    SDL_IOStream *bgFile = SDL_IOFromFile("sources/background.png", "rw");
+    if (bgFile == NULL)
+    {
+        SDL_Log("错误：读取背景图片失败!");
+        exit(2);
+    }
+    bgSurface = IMG_LoadPNG_IO(bgFile);
+    if (bgSurface == NULL)
+    {
+        SDL_Log("错误: 创建 surface 失败");
+        exit(2);
+    }
+    bgTexture = SDL_CreateTextureFromSurface(renderer, bgSurface);
+    if (bgTexture == NULL)
+    {
+        SDL_Log("错误:创建 texture 失败");
+        exit(2);
+    }
+    SDL_DestroySurface(bgSurface);
+
     SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+    // 禁用 alpha 混合以避免半透明效果
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
 }
@@ -115,7 +144,7 @@ void runWin()
         }
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
-        SDL_RenderPresent(renderer);
+        SDL_RenderTexture(renderer, bgTexture, NULL, NULL);
         drawSnake();
         drawFood();
         SDL_RenderPresent(renderer);
@@ -123,5 +152,6 @@ void runWin()
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
+    SDL_DestroyTexture(bgTexture);
     SDL_Quit();
 }

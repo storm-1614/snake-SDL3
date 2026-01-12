@@ -10,7 +10,7 @@ direction snakeDire;
 
 void initSnake()
 {
-    snakeColor = color{0, 255, 0, 255};
+    snakeColor = color{0, 0, 255, SDL_ALPHA_OPAQUE};
     snakeDire = right;
     for (int i = 5; i >= 1; i--)
     {
