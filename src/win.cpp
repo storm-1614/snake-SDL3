@@ -13,24 +13,33 @@
 #include <SDL3/SDL_video.h>
 #include <SDL3_image/SDL_image.h>
 #include <cstddef>
-#include <cstdio>
 #include <cstdlib>
 #include <ctime>
 
+// 主窗口
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
+// 背景的 surface 和 texture
 SDL_Surface *bgSurface = NULL;
 SDL_Texture *bgTexture = NULL;
 
 const int WINDOW_HEIGHT = 600;
 const int WINDOW_WIDTH = 800;
-const int FRAME_RER_SECOND = 24;
+
+// 实现非阻塞变量
 const double STEP = 0.1;
 double accumulator = 0.0;
 
 Uint64 freq = SDL_GetPerformanceFrequency();
 Uint64 last = SDL_GetPerformanceCounter();
 
+/*
+ * 各项初始化函数
+ * 初始化随机种子
+ * 初始化 SDL
+ * 初始化窗口和渲染器
+ * 初始化背景图片
+ */
 void initWin()
 {
     srand(time(NULL));
@@ -45,32 +54,27 @@ void initWin()
         exit(1);
     }
 
-    if (SDL_SetRenderVSync(renderer, 1) == false)
-    // WARN: 这块代码没有用 本来是想弄帧率的
-    {
-        SDL_Log("错误: VSync 错误");
-        exit(1);
-    }
-    // 加载图片
+    // 加载背景图片
     SDL_IOStream *bgFile = SDL_IOFromFile("sources/background.png", "rw");
     if (bgFile == NULL)
     {
         SDL_Log("错误：读取背景图片失败!");
         exit(2);
     }
-    bgSurface = IMG_LoadPNG_IO(bgFile);
-    if (bgSurface == NULL)
+
+    if ((bgSurface = IMG_LoadPNG_IO(bgFile)) == NULL)
     {
         SDL_Log("错误: 创建背景 surface 失败");
         exit(2);
     }
-    bgTexture = SDL_CreateTextureFromSurface(renderer, bgSurface);
-    if (bgTexture == NULL)
+
+    if ((bgTexture = SDL_CreateTextureFromSurface(renderer, bgSurface)) == NULL)
     {
         SDL_Log("错误:创建 texture 失败");
         exit(2);
     }
     SDL_DestroySurface(bgSurface);
+    bgSurface = NULL;
 
     initFood();
     initSnake();
@@ -88,52 +92,19 @@ void runWin()
  */
 {
     initWin();
-    SDL_Event event;
 
     bool running = true;
     while (running)
+    /*
+     * 主循环
+     */
     {
         Uint64 now = SDL_GetPerformanceCounter();
         double delta = (double)(now - last) / freq;
         last = now;
         accumulator += delta;
 
-        //        SDL_PollEvent(&event);
-        //        switch (event.type)
-        //        {
-        //        case SDL_EVENT_QUIT:
-        //            running = false;
-        //        case SDL_EVENT_KEY_DOWN:
-        //
-        if (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_EVENT_QUIT)
-            {
-                running = false;
-            }
-            if (event.type == SDL_EVENT_KEY_DOWN)
-            {
-                switch (event.key.key)
-                {
-                case SDLK_W:
-                    if (snakeDire != down)
-                        snakeDire = up;
-                    break;
-                case SDLK_A:
-                    if (snakeDire != right)
-                        snakeDire = left;
-                    break;
-                case SDLK_S:
-                    if (snakeDire != up)
-                        snakeDire = down;
-                    break;
-                case SDLK_D:
-                    if (snakeDire != left)
-                        snakeDire = right;
-                    break;
-                }
-            }
-        }
+        running = eventHandle();
 
         while (accumulator >= STEP)
         /*
@@ -143,18 +114,8 @@ void runWin()
             updateSnake();
             accumulator -= STEP;
         }
-
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
-        SDL_RenderTexture(renderer, bgTexture, NULL, NULL);
-        drawSnake();
-        drawFood();
-        SDL_RenderPresent(renderer);
+        redraw();
     }
 
-    destoryFood();
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyTexture(bgTexture);
-    SDL_Quit();
+    quit();
 }

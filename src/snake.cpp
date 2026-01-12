@@ -4,10 +4,19 @@
 #include <SDL3/SDL_log.h>
 #include <algorithm>
 
+/*
+ * 用双向队列存储蛇的位置，方便头尾插入删除，还能用 std::find
+ */
 std::deque<point> snakeBody;
 color snakeColor;
 direction snakeDire;
 
+/*
+ * 初始化蛇
+ * 初始化蛇的颜色
+ * 确定默认方向
+ * 初始化长度为 5 的蛇身
+ */
 void initSnake()
 {
     snakeColor = color{0, 0, 255, SDL_ALPHA_OPAQUE};
@@ -18,14 +27,20 @@ void initSnake()
     }
 }
 
+/*
+ * 获得下一步的位置
+ */
 point nextPos()
 {
     /*
-     * 这一行代码我是真无语了
+     * INFO: 这一行代码我是真无语了
      * list 底层逻辑是双向链表,一大堆问题
+     * 然后我换成了 deque 双向链表 解决问题！！！
+     * STL 和数据结构还是不太熟
      */
+    // 获得头部信息
     point head = snakeBody.back();
-    SDL_Log("head：x=%d, y=%d", head.x, head.y);
+    SDL_Log("LOG: head：x=%d, y=%d", head.x, head.y);
     switch (snakeDire)
     {
     case left:
@@ -43,6 +58,7 @@ point nextPos()
     default:
         break;
     }
+    // 穿墙逻辑
     if (head.x >= 800)
         head.x = 0;
     else if (head.x < 0)
@@ -55,6 +71,22 @@ point nextPos()
     return head;
 }
 
+void debugSnakeData()
+{
+    SDL_Log("=========================");
+    SDL_Log("LOG：蛇身数据结构信息打印");
+    for (auto iter : snakeBody)
+    {
+        SDL_Log("x=%d, y=%d", iter.x, iter.y);
+    }
+    SDL_Log("=========================");
+}
+
+/*
+ * 更新蛇
+ * 获得下一步的位置
+ * 进行吃到食物和吃到自己的判断
+ */
 void updateSnake()
 {
     point next = nextPos();
@@ -74,18 +106,12 @@ void updateSnake()
         snakeBody.pop_front();
         snakeBody.push_back(next);
     }
+    debugSnakeData();
 }
 
-void debugSnakeData()
-{
-    SDL_Log("LOG：蛇身数据结构信息打印");
-    for (auto iter : snakeBody)
-    {
-        SDL_Log("x=%d, y=%d", iter.x, iter.y);
-    }
-    SDL_Log("=========================");
-}
-
+/*
+* 蛇的绘制
+*/
 void drawSnake()
 {
     for (auto iter : snakeBody)

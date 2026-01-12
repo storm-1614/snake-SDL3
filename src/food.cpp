@@ -19,10 +19,18 @@ SDL_IOStream *foodImage = NULL;
 SDL_Surface *foodImageSurface = NULL;
 SDL_Texture *foodImageTexture = NULL;
 
+/*
+ * 初始化食物
+ * 初始化食物颜色
+ * 生成食物
+ * 初始化食物图片
+ */
 void initFood()
 {
     foodColor = color{.r = 255, .g = 0, .b = 0, .a = SDL_ALPHA_OPAQUE};
+
     foodPos = randomFood();
+
     if ((foodImage = SDL_IOFromFile("sources/apple.png", "r")) == NULL)
     {
         SDL_Log("错误：读取食物图片失败");
@@ -41,10 +49,15 @@ void initFood()
     SDL_DestroySurface(foodImageSurface);
     foodImageSurface = NULL;
 }
+
+/*
+ * 随机食物位置函数
+ * 返回食物坐标
+ */
 point randomFood()
 {
-    bool flag = false;
-    point pos;
+    bool flag = false; // 是否得到合适食物坐标标识
+    point pos;         // 位置
     while (!flag)
     {
         int x = rand() % (800 / 20);
@@ -52,6 +65,9 @@ point randomFood()
         pos.x = x * 20;
         pos.y = y * 20;
         if (std::find(snakeBody.begin(), snakeBody.end(), pos) == snakeBody.end())
+        /*
+         * 如果生成的坐标是蛇身就继续循环
+         */
         {
             SDL_Log("Log: 生成一个食物");
             flag = true;
@@ -60,9 +76,13 @@ point randomFood()
     return pos;
 }
 
+/*
+ * 绘制食物函数
+ * 原本只是像素点仅用 game.cpp 下实现的 drawRect 函数，但是现在比较复杂了。
+ */
 void drawFood()
 {
-    SDL_FRect rect{(float)foodPos.x, (float)foodPos.y, 20, 20};
+    SDL_FRect rect{(float)foodPos.x, (float)foodPos.y, 20, 20};  // 矩形结构
     drawPic(foodImageTexture, rect);
 }
 

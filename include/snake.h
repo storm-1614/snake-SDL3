@@ -6,6 +6,9 @@
 extern std::deque<point> snakeBody;
 extern color snakeColor;
 enum direction
+/*
+ * 方向枚举
+ */
 {
     left,
     right,
