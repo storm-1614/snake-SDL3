@@ -20,3 +20,4 @@ struct point
 
 void test();
 void drawRect(int x, int y, color c);
+void drawPic(SDL_Texture *texture, SDL_FRect rect);

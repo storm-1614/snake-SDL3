@@ -34,8 +34,6 @@ Uint64 last = SDL_GetPerformanceCounter();
 void initWin()
 {
     srand(time(NULL));
-    initFood();
-    initSnake();
     if (!SDL_Init(SDL_INIT_VIDEO))
     {
         SDL_Log("错误: SDL 初始化失败");
@@ -63,7 +61,7 @@ void initWin()
     bgSurface = IMG_LoadPNG_IO(bgFile);
     if (bgSurface == NULL)
     {
-        SDL_Log("错误: 创建 surface 失败");
+        SDL_Log("错误: 创建背景 surface 失败");
         exit(2);
     }
     bgTexture = SDL_CreateTextureFromSurface(renderer, bgSurface);
@@ -74,9 +72,12 @@ void initWin()
     }
     SDL_DestroySurface(bgSurface);
 
+    initFood();
+    initSnake();
+
+    // TODO: 这边需要整合一下
     SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-    // 禁用 alpha 混合以避免半透明效果
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE); // 禁用 alpha 混合以避免半透明效果
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
 }
@@ -142,6 +143,7 @@ void runWin()
             updateSnake();
             accumulator -= STEP;
         }
+
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         SDL_RenderTexture(renderer, bgTexture, NULL, NULL);
@@ -150,6 +152,7 @@ void runWin()
         SDL_RenderPresent(renderer);
     }
 
+    destoryFood();
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyTexture(bgTexture);

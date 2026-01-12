@@ -8,3 +8,4 @@ extern point foodPos;
 void initFood();
 point randomFood();
 void drawFood();
+void destoryFood();
