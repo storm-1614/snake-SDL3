@@ -4,7 +4,7 @@
 #include <SDL3/SDL_log.h>
 #include <algorithm>
 
-std::list<point> snakeBody;
+std::deque<point> snakeBody;
 color snakeColor;
 direction snakeDire;
 
@@ -14,7 +14,7 @@ void initSnake()
     snakeDire = right;
     for (int i = 5; i >= 1; i--)
     {
-        snakeBody.emplace_back(point{20 * i, 20});
+        snakeBody.push_front(point{20 * i, 20});
     }
 }
 
@@ -57,24 +57,22 @@ point nextPos()
 
 void updateSnake()
 {
-    static int count = 0;
-    count++;
     point next = nextPos();
 
-    if (count > 10 && std::find(snakeBody.begin(), snakeBody.end(), next) != snakeBody.end())
+    if (std::find(snakeBody.begin(), snakeBody.end(), next) != snakeBody.end())
     {
         SDL_Log("You Died");
         exit(0);
     }
     if (next.x == foodPos.x && next.y == foodPos.y)
     {
-        snakeBody.emplace_back(next);
+        snakeBody.push_back(next);
         foodPos = randomFood();
     }
     else
     {
-        snakeBody.erase(snakeBody.begin());
-        snakeBody.emplace_back(next);
+        snakeBody.pop_front();
+        snakeBody.push_back(next);
     }
 }
 

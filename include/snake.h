@@ -1,9 +1,9 @@
 #pragma once
 #include "game.h"
 #include <SDL3/SDL_rect.h>
-#include <list>
+#include <deque>
 
-extern std::list<point> snakeBody;
+extern std::deque<point> snakeBody;
 extern color snakeColor;
 enum direction
 {
