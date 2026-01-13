@@ -6,6 +6,8 @@
 extern SDL_Surface *bgSurface;
 extern SDL_Texture *bgTexture;
 
+extern int score;
+
 // 包含 RGBA 的颜色结构体
 struct color
 {

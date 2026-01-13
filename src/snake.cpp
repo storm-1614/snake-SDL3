@@ -93,11 +93,13 @@ void updateSnake()
 
     if (std::find(snakeBody.begin(), snakeBody.end(), next) != snakeBody.end())
     {
-        SDL_Log("You Died");
+        SDL_Log("你死了");
+        SDL_Log("分数: %d", score);
         exit(0);
     }
     if (next.x == foodPos.x && next.y == foodPos.y)
     {
+        score += 10;
         snakeBody.push_back(next);
         foodPos = randomFood();
     }

@@ -82,7 +82,7 @@ point randomFood()
  */
 void drawFood()
 {
-    SDL_FRect rect{(float)foodPos.x, (float)foodPos.y, 20, 20};  // 矩形结构
+    SDL_FRect rect{(float)foodPos.x, (float)foodPos.y, 20, 20};
     drawPic(foodImageTexture, rect);
 }
 

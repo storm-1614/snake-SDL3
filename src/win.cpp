@@ -1,20 +1,22 @@
 #include "../include/win.h"
 #include "../include/food.h"
 #include "../include/snake.h"
-#include <SDL3/SDL_events.h>
+#include "../include/font.h"
+#include "../include/game.h"
 #include <SDL3/SDL_init.h>
 #include <SDL3/SDL_iostream.h>
-#include <SDL3/SDL_keycode.h>
 #include <SDL3/SDL_log.h>
-#include <SDL3/SDL_oldnames.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_surface.h>
 #include <SDL3/SDL_timer.h>
 #include <SDL3/SDL_video.h>
 #include <SDL3_image/SDL_image.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <cstddef>
+#include <cstdio>
 #include <cstdlib>
 #include <ctime>
+#include <string>
 
 // 主窗口
 SDL_Window *window = NULL;
@@ -76,6 +78,7 @@ void initWin()
     SDL_DestroySurface(bgSurface);
     bgSurface = NULL;
 
+    initFont();
     initFood();
     initSnake();
 
@@ -86,9 +89,16 @@ void initWin()
     SDL_RenderPresent(renderer);
 }
 
+// 入口
 void runWin()
 /*
- * 让窗口跑起来的 damo
+ * 让窗口跑起来的 damo（划掉）
+ * 原本当 damo 的，但是没想到最后成了事实上的游戏入口
+ * 大致分为了三部分：
+ * 初始化
+ * 主循环
+ * 游戏结束资源释放
+ * 这里主循环还分了：事件管理-更新数据-渲染窗口
  */
 {
     initWin();
@@ -103,7 +113,10 @@ void runWin()
         double delta = (double)(now - last) / freq;
         last = now;
         accumulator += delta;
+        std::string scoreStr = "分数: ";
+        scoreStr += std::to_string(score);
 
+        loadFont( white, scoreStr.c_str());
         running = eventHandle();
 
         while (accumulator >= STEP)
@@ -112,6 +125,7 @@ void runWin()
          */
         {
             updateSnake();
+
             accumulator -= STEP;
         }
         redraw();

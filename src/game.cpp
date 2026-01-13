@@ -2,11 +2,13 @@
 #include "../include/food.h"
 #include "../include/snake.h"
 #include "../include/win.h"
+#include "../include/font.h"
 #include <SDL3/SDL_rect.h>
 #include <SDL3/SDL_render.h>
 
 const int h = 20;
 const int w = 20;
+int score = 0;
 
 /*
  * 绘制像素块
@@ -85,6 +87,7 @@ void redraw()
     SDL_RenderTexture(renderer, bgTexture, NULL, NULL);
     drawSnake();
     drawFood();
+    drawFont();
     SDL_RenderPresent(renderer);
 }
 
@@ -97,5 +100,6 @@ void quit()
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyTexture(bgTexture);
+    destoryFont();
     SDL_Quit();
 }
