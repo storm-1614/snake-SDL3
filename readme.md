@@ -13,6 +13,8 @@ sudo pacman -S sdl3 sdl3_image sdl3_ttf
 课程设计第一天:  
 学会 SDL3 的使用  
 完成基本基本的贪吃蛇功能  
+课程设计第二天：
+加了个分数栏
 
 ## TODO  
 - [ ] 蛇的图片
@@ -23,16 +25,18 @@ sudo pacman -S sdl3 sdl3_image sdl3_ttf
 ## 代码量
 ```
 ❯ git ls-files '*.cpp' '*.h' | xargs wc -l
+   11 include/font.h
    10 include/food.h
-   34 include/game.h
+   36 include/game.h
    23 include/snake.h
    12 include/win.h
     6 main.cpp
+   81 src/font.cpp
    92 src/food.cpp
-  101 src/game.cpp
-  121 src/snake.cpp
-  121 src/win.cpp
-  520 total
+  108 src/game.cpp
+  123 src/snake.cpp
+  136 src/win.cpp
+  638 total
 ```
 
 ## 结构
@@ -43,6 +47,7 @@ sudo pacman -S sdl3 sdl3_image sdl3_ttf
 ├── img
 │   └── 1.png
 ├── include
+│   ├── font.h
 │   ├── food.h
 │   ├── game.h
 │   ├── snake.h
@@ -52,12 +57,14 @@ sudo pacman -S sdl3 sdl3_image sdl3_ttf
 ├── readme.md
 ├── sources
 │   ├── apple.png
-│   └── background.png
+│   ├── background.png
+│   └── SourceHanSansCN-Normal.otf
 └── src
+    ├── font.cpp
     ├── food.cpp
     ├── game.cpp
     ├── snake.cpp
     └── win.cpp
 
-5 directories, 15 files
+5 directories, 18 files
 ```

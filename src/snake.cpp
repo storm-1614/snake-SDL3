@@ -97,7 +97,7 @@ void updateSnake()
         SDL_Log("分数: %d", score);
         exit(0);
     }
-    if (next.x == foodPos.x && next.y == foodPos.y)
+    else if (next.x == foodPos.x && next.y == foodPos.y)
     {
         score += 10;
         snakeBody.push_back(next);

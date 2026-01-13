@@ -75,15 +75,13 @@ void initWin()
     SDL_DestroySurface(bgSurface);
     bgSurface = NULL;
 
-    initFont();
-    initFood();
-    initSnake();
-
-    // TODO: 这边需要整合一下
     SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE); // 禁用 alpha 混合以避免半透明效果
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
+    initFont();
+    initFood();
+    initSnake();
 }
 
 // 入口
