@@ -28,12 +28,15 @@ void drawRect(int x, int y, color c)
  */
 void drawPic(SDL_Texture *texture, SDL_FRect rect)
 {
-    // TODO: 解释
+    /*
+     * SDL_Vertex 的 verts 定义了矩形的四个坐标，后面参数的颜色值随便了，反正要拿图片覆盖。
+     */
     SDL_Vertex verts[4] = {{{rect.x, rect.y}, {255, 255, 255, 255}, {0.0f, 0.0f}},
                            {{rect.x + rect.w, rect.y}, {255, 255, 255, 255}, {1.0f, 0.0f}},
                            {{rect.x + rect.w, rect.y + rect.h}, {255, 255, 255, 255}, {1.0f, 1.0f}},
                            {{rect.x, rect.y + rect.h}, {255, 255, 255, 255}, {0.0f, 1.0f}}};
-    int indices[6] = {0, 1, 2, 2, 3, 0};
+    int indices[6] = {0, 1, 2, 2, 3, 0}; // 定义三角形，因为 GPU 绘制的基本单位是三角型
+    // SDL_RenderGeometry 开始从 texture 进行绘制
     SDL_RenderGeometry(renderer, texture, verts, 4, indices, 6); // 绘制
 }
 

@@ -1,8 +1,8 @@
 #include "../include/win.h"
-#include "../include/food.h"
-#include "../include/snake.h"
 #include "../include/font.h"
+#include "../include/food.h"
 #include "../include/game.h"
+#include "../include/snake.h"
 #include <SDL3/SDL_init.h>
 #include <SDL3/SDL_iostream.h>
 #include <SDL3/SDL_log.h>
@@ -32,9 +32,6 @@ const int WINDOW_WIDTH = 800;
 const double STEP = 0.1;
 double accumulator = 0.0;
 
-Uint64 freq = SDL_GetPerformanceFrequency();
-Uint64 last = SDL_GetPerformanceCounter();
-
 /*
  * 各项初始化函数
  * 初始化随机种子
@@ -57,7 +54,7 @@ void initWin()
     }
 
     // 加载背景图片
-    SDL_IOStream *bgFile = SDL_IOFromFile("sources/background.png", "rw");
+    SDL_IOStream *bgFile = SDL_IOFromFile("sources/background.png", "r");
     if (bgFile == NULL)
     {
         SDL_Log("错误：读取背景图片失败!");
@@ -101,6 +98,9 @@ void runWin()
  * 这里主循环还分了：事件管理-更新数据-渲染窗口
  */
 {
+    Uint64 freq = SDL_GetPerformanceFrequency(); // 获取高精度计时器的频率
+    Uint64 last = SDL_GetPerformanceCounter();   // 获取最初计时器的值
+
     initWin();
 
     bool running = true;
@@ -109,26 +109,27 @@ void runWin()
      * 主循环
      */
     {
-        Uint64 now = SDL_GetPerformanceCounter();
-        double delta = (double)(now - last) / freq;
+        Uint64 now = SDL_GetPerformanceCounter(); // 获取现在计时器的值
+        double delta = (double)(now - last) / freq;  // 计算差值
         last = now;
         accumulator += delta;
+
         std::string scoreStr = "分数: ";
         scoreStr += std::to_string(score);
 
-        loadFont( white, scoreStr.c_str());
-        running = eventHandle();
+        loadFont(white, scoreStr.c_str()); // 字体后台加载
+        running = eventHandle();           // 事件处理
 
         while (accumulator >= STEP)
-        /*
-         * 更新的内容放这里
-         */
         {
+            /*
+             * 更新的内容放这里
+             */
             updateSnake();
 
             accumulator -= STEP;
         }
-        redraw();
+        redraw(); // 绘制
     }
 
     quit();
